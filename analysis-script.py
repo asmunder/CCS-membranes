@@ -26,7 +26,7 @@ def get_data(wb,name):
     nstagesOptSheet = wb['nStages(-)-opt']
     nstagesOpt = np.zeros((xlen,ylen))
     for j,co in enumerate(nstagesOptSheet.values):
-        nstagesOpt[:,j] = np.array(co)
+        nstagesOpt[:,j] = np.array([np.int(c) for c in co])
     
     ccrOptSheet = wb['CCR(-)-opt']
     ccrOpt = np.zeros((xlen,ylen))
@@ -41,14 +41,15 @@ def get_data(wb,name):
     nstages90Sheet = wb['nStages(-)-CCR90']
     nstages90 = np.zeros((xlen,ylen))
     for j,co in enumerate(nstages90Sheet.values):
-        nstages90[:,j] = np.array(co)
+        nstages90[:,j] = np.array([np.int(c) for c in co])
     
     costRedOpt90Sheet = wb['costReductionVs90pct(-)-opt']
     costRedOpt90 = np.zeros((xlen,ylen))
     for j,co in enumerate(costRedOpt90Sheet.values):
         costRedOpt90[:,j] = np.array(co)
 
-    data_dict = {'x':xaxis,'y':yaxis,'xlen':xlen,'ylen':ylen,
+    # For some reason, Excel sheet y and x is transposed
+    data_dict = {'x':yaxis,'y':xaxis,'xlen':ylen,'ylen':xlen,
             'costOpt':costOpt,'nstagesOpt':nstagesOpt,'ccrOpt':ccrOpt,
             'cost90':cost90,'nstages90':nstages90,
             'costRedOpt90':costRedOpt90,'appl':name}
