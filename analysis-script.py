@@ -21,32 +21,50 @@ def get_data(wb,name):
     costOptSheet = wb['cost($)-opt']
     costOpt = np.zeros((xlen,ylen))
     for j,co in enumerate(costOptSheet.values):
-        costOpt[:,j] = np.array(co)
+        c = np.array(co).astype(float)
+        #c[np.isnan(c)] = -100.0
+        c[c < 1e-6] = np.nan
+        costOpt[:,j] = c
     
     nstagesOptSheet = wb['nStages(-)-opt']
     nstagesOpt = np.zeros((xlen,ylen))
     for j,co in enumerate(nstagesOptSheet.values):
-        nstagesOpt[:,j] = np.array([np.int(c) for c in co])
+        c = np.array(co).astype(int)
+        c[c == np.array(None)] = -10
+        c[c == 0] = -10
+        nstagesOpt[:,j] = c
     
     ccrOptSheet = wb['CCR(-)-opt']
     ccrOpt = np.zeros((xlen,ylen))
     for j,co in enumerate(ccrOptSheet.values):
-        ccrOpt[:,j] = np.array(co)
+        c = np.array(co).astype(float)
+        #c[np.isnan(c)] = -100.0
+        c[c < 1e-6] = np.nan
+        ccrOpt[:,j] = c
     
     cost90Sheet = wb['cost($)-CCR90']
     cost90 = np.zeros((xlen,ylen))
     for j,co in enumerate(cost90Sheet.values):
-        cost90[:,j] = np.array(co)
+        c = np.array(co).astype(float)
+        #c[np.isnan(c)] = -100.0
+        c[c < 1e-6] = np.nan
+        cost90[:,j] = c
     
     nstages90Sheet = wb['nStages(-)-CCR90']
     nstages90 = np.zeros((xlen,ylen))
     for j,co in enumerate(nstages90Sheet.values):
-        nstages90[:,j] = np.array([np.int(c) for c in co])
+        c = np.array(co).astype(int)
+        c[c == np.array(None)] = -10
+        c[c == 0] = -10
+        nstages90[:,j] = c
     
     costRedOpt90Sheet = wb['costReductionVs90pct(-)-opt']
     costRedOpt90 = np.zeros((xlen,ylen))
     for j,co in enumerate(costRedOpt90Sheet.values):
-        costRedOpt90[:,j] = np.array(co)
+        c = np.array(co).astype(float)
+        #c[np.isnan(c)] = -100.0
+        c[c > -1e-30] = np.nan
+        costRedOpt90[:,j] = c
 
     # For some reason, Excel sheet y and x is transposed
     data_dict = {'x':yaxis,'y':xaxis,'xlen':ylen,'ylen':xlen,
