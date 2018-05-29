@@ -67,7 +67,7 @@ def get_data(wb,name):
         costRedOpt90[:,j] = c
 
     # For some reason, Excel sheet y and x is transposed
-    data_dict = {'x':yaxis,'y':xaxis,'xlen':ylen,'ylen':xlen,
+    data_dict = {'xval':yaxis,'yval':xaxis,'xlen':ylen,'ylen':xlen,
             'costOpt':costOpt,'nstagesOpt':nstagesOpt,'ccrOpt':ccrOpt,
             'cost90':cost90,'nstages90':nstages90,
             'costRedOpt90':costRedOpt90,'appl':name}
