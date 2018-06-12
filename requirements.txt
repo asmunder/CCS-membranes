@@ -1,0 +1,6 @@
+numpy=1.14.2
+matplotlib=2.2.2
+holoviews=1.10.2
+bokeh=0.12.15
+pandas=0.22.0
+
