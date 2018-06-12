@@ -4,16 +4,25 @@ from bokeh import io #.io import output_file, save
 from bokeh.layouts import gridplot
 hv.extension('bokeh')
 
+# List of names of applications
+appl_list = ['Cement','Steel','Coal','FCC','FG','LSFO']
+# List of corresponding abbreviations used in data file
+appl_abbrv = ['cem','steel','coal','fcc','fg','lsfo']
+# Zip the lists together and create a dict so we can lookup abbreviation from name
+appl_dict = dict(zip(appl_list,appl_abbrv))
+
+# Load the data from a list of dict of Pandas dataframes
 all_data = np.load('all-data-dict.npy')
 all_data = all_data[()]
 
-def get_data(appl):
-    return all_data[appl]
+def get_baseplot(sel_appl,**kwargs):
 
-def get_baseplot(appl):
+    # Get abbreviation for this application
+    appl = appl_dict[sel_appl]
+    # Get the data set for this application
+    data = all_data[appl]
 
-    data = get_data(appl)
-
+    # Set some common options for all the figures
     opts = {'width':600,'height':400,'colorbar':True,'tools':['hover']}
     xylab = [hv.Dimension('xval'),hv.Dimension('yval')]
     hvargs = {'kdims':xylab}
@@ -45,16 +54,20 @@ def get_baseplot(appl):
             levels=[1.0,2.0,3.0],filled=True
         ).options(**opts,cmap='Wistia',color_levels=3)
 
-    image = im1+im2+im3+im4+im5+im6
-    image = image.cols(2)
-    return image
+    #image = im1+im2+im3+im4+im5+im6
+    #image = image.cols(2)
+    return im1+im2
 
+# Define the dimension over which to make the HoloMap
+kdim = hv.Dimension(('appl','Application'),default=appl_list[0])
+# Make the HoloMap and collate it
+hmap = hv.HoloMap( {appl : get_baseplot(appl) for appl in appl_list},kdims=kdim)
+hmap = hmap.collate()
+#hmap = hv.DynamicMap(get_baseplot, kdims=kdim).redim.values(appl=appl_list)
+#hmap.options(framewise=True)
+# Render this to a file
 renderer = hv.renderer('bokeh')
-appl_list = ['cem','steel','coal','fcc','fg','lsfo']
-#image = hv.HoloMap( {appl : get_baseplot(appl) for appl in appl_list },kdims="Application")
-image = hv.DynamicMap(get_baseplot, kdims='Appl').redim.values(Appl=appl_list)
-image.options(framewise=True)
-#image = image.collate()
-plot = renderer.get_plot(image).state
-io.output_file("test.html",mode='inline')
-io.show(plot)
+renderer.save(hmap,'test')
+#plot = renderer.get_plot(hmap).state
+#io.output_file("test.html",mode='inline')
+#io.show(plot)
