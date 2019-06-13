@@ -54,9 +54,9 @@ def get_baseplot(sel_appl,**kwargs):
             levels=[1.0,2.0,3.0],filled=True
         ).options(**opts,cmap='Wistia',color_levels=3)
 
-    #image = im1+im2+im3+im4+im5+im6
-    #image = image.cols(2)
-    return im1+im2
+    image = im1+im2+im3+im4+im5+im6
+    image = image.cols(2)
+    return image#im1+im2
 
 # Define the dimension over which to make the HoloMap
 kdim = hv.Dimension(('appl','Application'),default=appl_list[0])
